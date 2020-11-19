@@ -34,11 +34,13 @@ except:
     sleep(20)
     sys.exit()
 
-# Input for email ID, Password and Delay
+# Input Parameters
 print('User Input')
 EmailID = pyip.inputEmail('Email ID (Group email ID only): ')
 Password = pyip.inputPassword(prompt='Password: ', mask='*')
 Delay = pyip.inputInt('Enter delay in seconds (10-100): ', min=10, max=100)
+print('Do you want to skip Data Export? (Yes/No): ', end='')
+Response = pyip.inputYesNo()
 
 # Setting Chrome up
 chrome_options = webdriver.ChromeOptions()
@@ -90,10 +92,11 @@ for r in range(2, sheet.max_row +1):
 
         # Click the Reconciliation Tab, Click on Data Analysis, Update the field start date and download the Data Analysis Report
         driver.find_element(By.LINK_TEXT, 'Reconciliations').click()
-        driver.find_element(By.ID, 'ctl00_ctl00_ContentPlaceHolder1_btnDataAnalysis').click()
-        driver.find_element(By.ID, 'ctl00_ctl00_ContentPlaceHolder1_ContentItems_tbFromDate').clear()
-        driver.find_element(By.ID, 'ctl00_ctl00_ContentPlaceHolder1_ContentItems_tbFromDate').send_keys('01/01/2019')
-        driver.find_element(By.ID, 'ctl00_ctl00_ContentPlaceHolder1_ContentItems_btnGenerate').click()
+        if Response == 'no':
+            driver.find_element(By.ID, 'ctl00_ctl00_ContentPlaceHolder1_btnDataAnalysis').click()
+            driver.find_element(By.ID, 'ctl00_ctl00_ContentPlaceHolder1_ContentItems_tbFromDate').clear()
+            driver.find_element(By.ID, 'ctl00_ctl00_ContentPlaceHolder1_ContentItems_tbFromDate').send_keys('01/01/2019')
+            driver.find_element(By.ID, 'ctl00_ctl00_ContentPlaceHolder1_ContentItems_btnGenerate').click()
 
         # Click on Reconciliation, Upload file and click finish multiple times
         # Check if there are pop-ups for bad id. In case final button is visible there is no popup
